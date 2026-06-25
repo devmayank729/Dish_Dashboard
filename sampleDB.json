@@ -1,0 +1,50 @@
+[
+  {
+    "dishId": 1,
+    "dishName": "Margherita Pizza",
+    "imageUrl": "https://images.unsplash.com/photo-1604382355076-af4b0eb60143",
+    "isPublished": true
+  },
+  {
+    "dishId": 2,
+    "dishName": "Veg Burger",
+    "imageUrl": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd",
+    "isPublished": false
+  },
+  {
+    "dishId": 3,
+    "dishName": "Paneer Butter Masala",
+    "imageUrl": "https://images.unsplash.com/photo-1631452180519-c014fe946bc7",
+    "isPublished": true
+  },
+  {
+    "dishId": 4,
+    "dishName": "Masala Dosa",
+    "imageUrl": "https://images.unsplash.com/photo-1668236543090-82eba5ee5976",
+    "isPublished": true
+  },
+  {
+    "dishId": 5,
+    "dishName": "Hakka Noodles",
+    "imageUrl": "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841",
+    "isPublished": false
+  },
+  {
+    "dishId": 6,
+    "dishName": "Veg Biryani",
+    "imageUrl": "https://images.unsplash.com/photo-1633945274405-b6c8069047b0",
+    "isPublished": true
+  },
+  {
+    "dishId": 7,
+    "dishName": "Pasta Alfredo",
+    "imageUrl": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9",
+    "isPublished": false
+  },
+  {
+    "dishId": 8,
+    "dishName": "Chocolate Brownie",
+    "imageUrl": "https://images.unsplash.com/photo-1606313564200-e75d5e30476c",
+    "isPublished": true
+  }
+]
