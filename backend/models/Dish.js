@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-// Define the schema
+
 const dishSchema = new mongoose.Schema({
   dishId: {
     type: Number,
@@ -21,8 +21,8 @@ const dishSchema = new mongoose.Schema({
 });
 
 
-// Create the model
+
 const Dish = mongoose.model("Dish", dishSchema);
 
-// Export it using ES Modules(ES6)
+
 export default Dish;

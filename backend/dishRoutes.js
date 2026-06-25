@@ -3,7 +3,7 @@ import Dish from "./models/Dish.js";
 
 const router = express.Router();
 
-// GET / - Fetch all dishes
+
 router.get("/", async (req, res) => {
   try {
     const dishes = await Dish.find();
@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// PATCH /:id/toggle - Toggle isPublished
+
 router.patch("/:id/toggle", async (req, res) => {
   try {
         const dish = await Dish.findOne({ dishId: req.params.id });

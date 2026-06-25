@@ -5,7 +5,7 @@ import DishCard from "./components/DishCard";
 function App() {
   const [dishes, setDishes] = useState([]);
 
-  // Fetch data when the dashboard loads
+
   useEffect(() => {
     fetchDishes();
   }, []);
@@ -20,15 +20,21 @@ function App() {
   };
 
   const handleToggle = async (id) => {
-    try {
-      // Call the backend to flip the boolean
-      await axios.patch(`http://localhost:5000/api/dishes/${id}/toggle`);
-      // Re-fetch the dishes to update the UI
-      fetchDishes();
-    } catch (error) {
-      console.error("Error toggling dish:", error);
-    }
-  };
+  setDishes(prevDishes => 
+    prevDishes.map(dish => 
+      dish.dishId === id ? { ...dish, isPublished: !dish.isPublished } : dish
+    )
+  );
+
+  try {
+
+    await axios.patch(`http://localhost:5000/api/dishes/${id}/toggle`);
+  } catch (error) {
+    console.error("Error toggling dish:", error);
+  
+    fetchDishes(); 
+  }
+};
 
   return (
     <div className="min-h-screen bg-slate-950 p-8">
