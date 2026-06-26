@@ -22,9 +22,11 @@ router.patch("/:id/toggle", async (req, res) => {
       return res.status(404).json({ message: "Dish not found" });
     }
 
+
     dish.isPublished = !dish.isPublished;
     await dish.save();
-
+    //
+    req.io.emit("dishUpdated", dish);
     res.status(200).json(dish);
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -1,13 +1,30 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { io } from "socket.io-client"; 
 import DishCard from "./components/DishCard";
+
+
+const socket = io("http://localhost:5000");
 
 function App() {
   const [dishes, setDishes] = useState([]);
 
-
   useEffect(() => {
     fetchDishes();
+
+    socket.on("dishUpdated", (updatedDish) => {
+
+      setDishes((prevDishes) =>
+        prevDishes.map((dish) =>
+          dish.dishId === updatedDish.dishId ? updatedDish : dish
+        )
+      );
+    });
+
+
+    return () => {
+      socket.off("dishUpdated");
+    };
   }, []);
 
   const fetchDishes = async () => {
@@ -20,21 +37,13 @@ function App() {
   };
 
   const handleToggle = async (id) => {
-  setDishes(prevDishes => 
-    prevDishes.map(dish => 
-      dish.dishId === id ? { ...dish, isPublished: !dish.isPublished } : dish
-    )
-  );
+    try {
+      await axios.patch(`http://localhost:5000/api/dishes/${id}/toggle`);
 
-  try {
-
-    await axios.patch(`http://localhost:5000/api/dishes/${id}/toggle`);
-  } catch (error) {
-    console.error("Error toggling dish:", error);
-  
-    fetchDishes(); 
-  }
-};
+    } catch (error) {
+      console.error("Error toggling dish:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 p-8">
