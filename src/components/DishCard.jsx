@@ -14,7 +14,7 @@ const DishCard = ({ dish, onToggle }) => {
       </p>
       <button
         onClick={() => onToggle(dish.dishId)}
-        className={`px-4 py-2 rounded-md font-semibold w-full transition-colors ${
+        className={`cursor-pointer px-4 py-2 rounded-md font-semibold w-full transition-colors ${
           dish.isPublished 
             ? "bg-red-600 hover:bg-red-700 text-white" 
             : "bg-green-600 hover:bg-green-700 text-white"

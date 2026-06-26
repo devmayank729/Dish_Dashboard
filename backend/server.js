@@ -2,25 +2,27 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
-import { createServer } from "http"; // 1. Import Node's native HTTP
-import { Server } from "socket.io"; // 2. Import Socket.io
+import { createServer } from "http";
+import { Server } from "socket.io";
 import dishRoutes from "./dishRoutes.js";
+import Dish from "./models/Dish.js";
 
 dotenv.config();
 
 const app = express();
-// 3. Create an HTTP server wrapping the Express app
 const httpServer = createServer(app); 
 
-// 4. Initialize Socket.io and configure CORS for your Vite frontend
+// 1. Initialize Socket.io and configure CORS
+// Note: If deploying to Render, replace localhost with your live frontend URL!
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5173", 
     methods: ["GET", "PATCH"],
     credentials: true
   },
 });
 
+// 2. Express Middleware
 app.use(cors({
   origin: "http://localhost:5173", 
   methods: ["GET", "PATCH", "POST", "DELETE"],
@@ -28,17 +30,31 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// 5. Inject the 'io' instance into every request so your routes can use it
+// 3. Inject the 'io' instance into requests (Optional, but good practice)
 app.use((req, res, next) => {
   req.io = io;
   next();
 });
 
+// 4. API Routes
 app.use("/api/dishes", dishRoutes);
 
+// 5. MongoDB Connection & Change Streams
 try {
   await mongoose.connect(process.env.MONGODB_URI);
   console.log("✅ MongoDB Connected");
+
+  // Initialize MongoDB Change Stream right after connecting
+  const changeStream = Dish.watch([], { fullDocument: 'updateLookup' });
+
+  changeStream.on('change', (change) => {
+    // Only broadcast if an existing document is updated or replaced
+    if (change.operationType === 'update' || change.operationType === 'replace') {
+      console.log("📡 Database change detected! Broadcasting to UI...");
+      io.emit("dishUpdated", change.fullDocument);
+    }
+  });
+
 } catch (err) {
   console.log("❌ Connection Error:", err.message);
 }
@@ -54,7 +70,7 @@ io.on("connection", (socket) => {
 
 const PORT = process.env.PORT || 5000;
 
-// 7. IMPORTANT: Listen on httpServer, NOT the Express app!
+// 7. Start the Server
 httpServer.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
 });
